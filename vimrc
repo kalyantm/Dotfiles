@@ -15,6 +15,7 @@ Plug 'w0rp/ale'
 Plug 'ryanoasis/vim-devicons'
 Plug 'easymotion/vim-easymotion'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'jiangmiao/auto-pairs'
 
 "Colorscheme Plugins
 Plug 'kaicataldo/material.vim'
@@ -142,6 +143,4 @@ nmap <leader><leader>f <Plug>(easymotion-overwin-w)
 " Use eslint for ale
 let g:ale_linters = {'javascript': ['eslint']}
 
-"Tmux vim navigator : navigate between two panes when nvim and tmux are
-"running
 
