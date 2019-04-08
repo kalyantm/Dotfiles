@@ -16,10 +16,11 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'easymotion/vim-easymotion'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'jiangmiao/auto-pairs'
+Plug 'itchyny/calendar.vim'
 
 "Colorscheme Plugins
-Plug 'kaicataldo/material.vim'
-Plug 'ayu-theme/ayu-vim'
+Plug 'rakr/vim-one' 
+Plug 'ayu-theme/ayu-vim' 
 
 " Language specific plugins
 Plug 'pangloss/vim-javascript'
@@ -27,7 +28,7 @@ Plug 'mxw/vim-jsx'
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'leafgarland/typescript-vim'  
 Plug 'elmcast/elm-vim'
-Plug 'neovimhaskell/haskell-vim'
+Plug 'rust-lang/rust.vim'
 call plug#end()
 
 "use jk to exit insert mode
@@ -47,6 +48,8 @@ if (has("termguicolors"))
 endif
 
 " Set color theme
+syntax enable
+set background=dark
 let ayucolor="mirage"
 colorscheme ayu
 
@@ -119,7 +122,7 @@ nnoremap <S-Tab> :bprev!<CR><Paste>
 
 " Indent code
 let g:indentLine_enabled = 1
-let g:indentLine_char = ">"
+let g:indentLine_char = ""
 
 " Show the following stuff on the vim airline
 let g:airline#extensions#tabline#enabled=1
@@ -143,4 +146,12 @@ nmap <leader><leader>f <Plug>(easymotion-overwin-w)
 " Use eslint for ale
 let g:ale_linters = {'javascript': ['eslint']}
 
+" Enable google task and calendar integration for calendar
+let g:calendar_google_calendar = 0
+let g:calendar_google_task = 0
 
+"Disable swap file
+set noswapfile
+
+"Auto format rust on save using Rustfmt
+let g:rustfmt_autosave = 1
