@@ -1,157 +1,243 @@
-" PLUGIN MANAGER TO INSTALL EXTERNAL PLUGINS
-
 call plug#begin('~/.local/share/nvim/plugged')
-" General utility plugins
-Plug 'Shougo/unite.vim' 
-Plug 'Yggdroot/indentLine'
-Plug 'airblade/vim-gitgutter'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+
+"Utility plugins
+Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdcommenter'
 Plug 'w0rp/ale'
-Plug 'ryanoasis/vim-devicons'
-Plug 'easymotion/vim-easymotion'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'jiangmiao/auto-pairs'
-Plug 'itchyny/calendar.vim'
-
-"Colorscheme Plugins
-Plug 'rakr/vim-one' 
-Plug 'ayu-theme/ayu-vim' 
-
-" Language specific plugins
 Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'  
+Plug 'mxw/vim-jsx'
+
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+
+" for typescript syntax highlighting
 Plug 'HerringtonDarkholme/yats.vim'
-Plug 'leafgarland/typescript-vim'  
-Plug 'elmcast/elm-vim'
-Plug 'rust-lang/rust.vim'
+" weirdly, loading tsuquyomi after typescript-vim breaks
+" syntax highlighting from typescript-vim
+Plug 'Quramy/tsuquyomi'
+Plug 'leafgarland/typescript-vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+" Let traverse our documents faster
+Plug 'easymotion/vim-easymotion'
+" Let's add some jazz
+Plug 'itchyny/lightline.vim'
+Plug 'rakr/vim-one'
+Plug 'mhartington/oceanic-next'
+" Fancy ones but not necessarily required
+" Generate matching bracket pair
+Plug 'jiangmiao/auto-pairs'
+" generate closing tag for html/jsx
+Plug 'alvan/vim-closetag'
+" Show git diff in gutter
+Plug 'airblade/vim-gitgutter'
+" Mainly to make 'set autoread' work correctly
+Plug 'tmux-plugins/vim-tmux-focus-events'
+" To highlight the lines i yanked. I don't use y<n>y because i have no idea
+" how much stuff i yanked
+Plug 'machakann/vim-highlightedyank'
 call plug#end()
 
-"use jk to exit insert mode
-inoremap jj <Esc>
+" turn syntax highlighting on
+syntax on
+" the below line turns on three things at once
+" filetype on
+" plugin on
+" indent on
+" filetype on - vim will try setting the filetype for current file and raise a FileType event, which can 
+" be used by plugins for syntax highlighting
+" plugin - Plugins associated with a particular file are loaded when a file is loaded
+" indent - indent.vim for a particular file type is loaded when the file is loaded
+filetype plugin indent on
 
-" Set true color for themes
-if (has("nvim"))
-  "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+" Let's add some jazz
+set background=dark
+" deal with colors
+if !has('gui_running')
+  set t_Co=256
 endif
-
-"For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
-"Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
-" < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
-if (has("termguicolors"))
+if (match($TERM, "-256color") != -1) && (match($TERM, "screen-256color") == -1)
+  " screen does not (yet) support truecolor
   set termguicolors
 endif
+colorscheme OceanicNext 
 
-" Set color theme
-syntax enable
-set background=dark
-let ayucolor="mirage"
-colorscheme ayu
-
-" Setting standard file encoding
-set encoding=utf8
-
-" No special per file vim override configs
-set nomodeline
-
-" Stop word wrapping
-set nowrap
-
-  " Except... on Markdown. That's good stuff.
-  autocmd FileType markdown setlocal wrap
-
-" Adjust system undo levels
-set undolevels=100
-
-" Use system clipboard
-set clipboard=unnamed
-
-" Setting tab width and convert tabs to spaces
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
-set expandtab
-
-" Don't let Vim hide characters or make loud dings
-set conceallevel=1
-set noerrorbells
-
-" Number gutter
+" relative line numbering, yo
+set relativenumber
+" but we don't want pure relative line numbering. The line where the cursor is should show absolute line number
 set number
 
-"Set relative number for easy jump to line
-set relativenumber
+" map space to leader key
+let mapleader="\<Space>"
 
-" Use search highlighting
-set hlsearch
+" map escape key to jj 
+:imap jj <Esc>
 
-" Space above/beside cursor from screen edges
-set scrolloff=1
-set sidescrolloff=5
+" don't want case sensitive searches
+set ignorecase
+" but still want search to be smart. If i type a upper case thing, do a case
+" sensitive search
+set smartcase
 
-" Use space as the leader key
-let mapleader="\<SPACE>"
+" show existing tab with 2 spaces width
+set tabstop=2
 
-" Disable mouse support
-set mouse=r
-let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+" when indenting with '>', use 2 spaces width
+set shiftwidth=2
 
-" let arrow keys to resize panes
-nnoremap <Left> :vertical resize -1<CR>
-nnoremap <Right> :vertical resize +1<CR>
-nnoremap <Up> :resize -1<CR>
-nnoremap <Down> :resize +1<CR>
+" On pressing tab, insert 2 spaces
+set expandtab
 
-" Disable arrow keys in insert mode
-imap <up> <nop>
-imap <down> <nop>
-imap <left> <nop>
-imap <right> <nop>
+" map ctrlp to open fzf file search 
+nnoremap <C-p> :Files<CR>
 
-" Space-Space to open recently opened buffer
-nmap <Leader><Leader> <c-^>
+" map Ctrl-q (terminals don't recognize ctrl-tab) (recent files) to show all 
+" files in the buffer
+nnoremap <leader>f :Buffers<CR>
+nnoremap <C-i> :Buffers<CR>
+inoremap <C-i> <Esc>:Buffers<CR>
 
-" Tab => next buffer ; Shift+Tab => Previous buffer
-nnoremap <Tab> :bnext!<CR>
-nnoremap <S-Tab> :bprev!<CR><Paste>
+" Tab in insert mode will activate autocomplete
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" : "\<TAB>"
 
-" Indent code
-let g:indentLine_enabled = 1
-let g:indentLine_char = ""
+" Substitute occurances of word under cursor 
+nnoremap <leader>s :s/\<<C-r><C-w>\>/
 
-" Show the following stuff on the vim airline
-let g:airline#extensions#tabline#enabled=1
-set laststatus=2
+map <leader>a to search word under cursor in the whole project
+nnoremap <leader>a :exe 'Ag!' expand('<cword>')<cr>
+" I like my cmd+s for saving files. In insert mode!
+" The terminal (or iterm) does not have support for anything related to
+" Command key
+" Hence need to hack stuff - https://stackoverflow.com/questions/33060569/mapping-command-s-to-w-in-vim
+inoremap <C-s> <Esc>:w<CR>i
+nnoremap <C-s> :w<CR>
 
-" Space-P or Space-T opens fuzzy finder - FZF
-nnoremap <Leader>p :Files<CR>
+" toggle NERDTree show/hide using <C-n> and <leader>n
+map <leader>n :NERDTreeToggle<CR>
 
-" Space+Backtick ` to toggle file tree ;;; Space+Tilde ~ to toggle file tree
-" from current buffer location
-map ` :NERDTreeToggle <CR>
+" reveal open buffer in NERDTree
+nmap <leader>r :NERDTreeFind<CR>
 
-" Tabbable dropdown for auto completion:
+" map gd to "go do definition"
+nnoremap gd :ALEGoToDefinition<CR>
+
+" allow switching of buffers without saving files
+" A hidden buffer is a buffer with some unsaved modifications and is not displayed in a window. Hidden buffers are useful, if you want to edit multiple buffers without saving the modifications made to a buffer while loading other buffers.
+set hidden
+
+" show a bar on column 80. Going beyond 80 chars per line gets hard to read.
+set colorcolumn=80
+
+" use system clipboard
+set clipboard+=unnamedplus
+
+" enable deoplete at startup
 let g:deoplete#enable_at_startup = 1
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+let g:deoplete#file#enable_buffer_path=1
 
-" Vim easy motion : Let's move around and find things easily, eh?
-map  <leader><leader>f <Plug>(easymotion-bd-w)
-nmap <leader><leader>f <Plug>(easymotion-overwin-w)
+"
+" let's setup ale, i.e. linting and syntax related stuff
+let g:ale_enabled = 1
+" let g:ale_lint_on_text_changed = 0
+" let g:ale_lint_on_insert_leave = 1
+" let g:ale_lint_on_save = 0
+" let g:ale_lint_on_enter = 0
+" Shows the error/warning text right after the line
+" let g:ale_virtualtext_cursor = 1
+" If typescript linting doesn't work correct or fast enough with tslint, try
+" using 'tsserver' instead
+" Disable ale for files inside node_modules
+let g:ale_pattern_options = {
+\   '.*node_modules.*\.js$': {'ale_enabled': 0, 'ale_fixers': []},
+\}
+let g:ale_linters = { 'javascript': ['eslint'], 'typescript': ['tslint'], 'rust': ['rls'] }
+let g:ale_fixers =  { 'javascript': ['prettier'], 'typescript': ['prettier'], 'css': ['prettier'], 'scss': ['prettier'], 'json': ['prettier']  }
+let g:ale_fix_on_save = 1
+let g:ale_statusline_format = ['X %d', '? %d', '']
+let g:ale_rust_rls_config = {
+	\ 'rust': {
+		\ 'all_targets': 1,
+		\ 'build_on_save': 1,
+		\ 'clippy_preference': 'on'
+	\ }
+	\ }
+let g:ale_rust_rls_toolchain = ''
+highlight link ALEWarningSign Todo
+highlight link ALEErrorSign WarningMsg
+highlight link ALEVirtualTextWarning Todo
+highlight link ALEVirtualTextInfo Todo
+highlight link ALEVirtualTextError WarningMsg
+highlight ALEError guibg=None
+highlight ALEWarning guibg=None
+let g:ale_sign_error = "✖"
+let g:ale_sign_warning = "⚠"
+let g:ale_sign_info = "i"
+let g:ale_sign_hint = "➤"
+let g:ale_completion_enabled = 1
 
-" Use eslint for ale
-let g:ale_linters = {'javascript': ['eslint']}
+" %linter% is the name of the linter that provided the message
+" %s is the error or warning message
+let g:ale_echo_msg_format = '%linter% cries %s'
+" Map keys to navigate between lines with errors and warnings.
+nnoremap <leader>an :ALENextWrap<cr>
+nnoremap <leader>ap :ALEPreviousWrap<cr>
 
-" Enable google task and calendar integration for calendar
-let g:calendar_google_calendar = 0
-let g:calendar_google_task = 0
-
-"Disable swap file
-set noswapfile
-
-"Auto format rust on save using Rustfmt
+" save rust code on file save
 let g:rustfmt_autosave = 1
+
+" easymotion leader is <Leader><Leader> by default. Let's change it to
+" <leader> only
+map <Leader> <Plug>(easymotion-prefix)
+" for quickly jumping to words assuming i know the first two characters of the
+" word
+map s <Plug>(easymotion-s2)
+
+" let's autoclose jsx tags
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.jsx,*.tsx,*.js'
+
+" add 1 space after comment delimiter
+let NERDSpaceDelims=1
+
+" Prevent files from being opened in nerdtree pane, if it's in focus
+let g:fzf_layout = { 'window': 'let g:launching_fzf = 1 | keepalt topleft 100split enew' }
+
+autocmd FileType nerdtree let t:nerdtree_winnr = bufwinnr('%')
+autocmd BufWinEnter * call PreventBuffersInNERDTree()
+
+function! PreventBuffersInNERDTree()
+  if bufname('#') =~ 'NERD_tree' && bufname('%') !~ 'NERD_tree'
+    \ && exists('t:nerdtree_winnr') && bufwinnr('%') == t:nerdtree_winnr
+    \ && &buftype == '' && !exists('g:launching_fzf')
+    let bufnum = bufnr('%')
+    close
+    exe 'b ' . bufnum
+  endif
+  if exists('g:launching_fzf') | unlet g:launching_fzf | endif
+endfunction
+
+" Augmenting Ag command using fzf#vim#with_preview function
+"   * fzf#vim#with_preview([[options], [preview window], [toggle keys...]])
+"     * For syntax-highlighting, Ruby and any of the following tools are required:
+"       - Bat: https://github.com/sharkdp/bat
+"       - Highlight: http://www.andre-simon.de/doku/highlight/en/highlight.php
+"       - CodeRay: http://coderay.rubychan.de/
+"       - Rouge: https://github.com/jneen/rouge
+"
+"   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
+"   :Ag! - Start fzf in fullscreen and display the preview window above
+command! -bang -nargs=* Ag
+  \ call fzf#vim#ag(<q-args>,
+  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
+  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \                 <bang>0)
+
+" reload files in buffer if changed on file system
+set autoread
