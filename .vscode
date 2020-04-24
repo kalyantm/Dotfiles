@@ -1,0 +1,36 @@
+{
+    "editor.formatOnSave": true,
+    "vim.insertModeKeyBindings": [
+        {
+            "before": [
+                "j",
+                "j"
+            ],
+            "after": [
+                "<Esc>"
+            ]
+        }
+    ],
+    "editor.lineNumbers": "relative",
+    "editor.fontFamily": "Dank Mono",
+    "debug.console.lineHeight": 30,
+    "editor.fontSize": 15,
+    "editor.fontLigatures": true,
+    "explorer.decorations.badges": true,
+    "explorer.decorations.colors": true,
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "workbench.colorTheme": "Night Owl",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.preferredLightColorTheme": "Night Owl Light (No Italics)",
+    "workbench.preferredDarkColorTheme": "Night Owl (No Italics)",
+    "editor.lineHeight": 24,
+}
